@@ -40,6 +40,7 @@ describe("У замка есть статы", () => {
     castle.actions.getDamage(10);
     expect(castle.state.health).toBe(CASTLE_HEALTH - 10);
   });
+
   it("When castle get health, healthpoint is increase", () => {
     castle.actions.getDamage(10);
     expect(castle.state.health).toBe(CASTLE_HEALTH - 10);
