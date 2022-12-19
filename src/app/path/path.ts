@@ -69,6 +69,8 @@ export class Path {
     const selectedDirectionIndex = this.getRandomDigit(1);
     const selectedDirection = curveDirection[selectedDirectionIndex];
 
+    console.log({ selectedDirection });
+
     const getNextPointForCurve = (
       fromPosition: Position,
       direction: string
@@ -97,7 +99,7 @@ export class Path {
       }
     };
 
-    return this.getBlankArray(2).reduce(
+    return this.getBlankArray(3).reduce(
       (accPoints, index) => {
         const direction = (() => {
           if (index === 0) {
@@ -175,7 +177,7 @@ export class Path {
       }
     };
 
-    const curvesCount = this.getRandomDigit(this.countCurvesLimit - 1) + 1;
+    const curvesCount = this.getRandomDigit(this.countCurvesLimit - 1) + 2;
     const pathPointsList = [
       this.startPoint,
       ...this.getBlankArray(curvesCount * 2),
