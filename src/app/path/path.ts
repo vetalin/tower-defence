@@ -105,7 +105,7 @@ export class Path {
       return [
         ...pathPoints,
         ...curvePoints,
-        this.getNextPoint(pathPoints[currentPointIndex - 1]),
+        this.getNextPoint(curvePoints[curvePoints.length - 1]),
       ];
     }, [] as Position[]);
 
