@@ -1,6 +1,10 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../game/const";
 import { Position } from "../game/interface";
-import { getBlankArray, getRandomDigit } from "../helper/help";
+import {
+  getBlankArray,
+  getRandomDigit,
+  getRandomDigitMinMax,
+} from "../helper/help";
 import { CurvePath } from "./CurvePath";
 import { PathDirection, PathPoints } from "./interface";
 import { PathDrawer } from "./PathDrawer";
@@ -11,6 +15,8 @@ export class PathBuilder {
   endPoint = { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 };
   startPoint: Position;
   step = 35;
+  maxStep = 45;
+  minStep = 20;
   spaceBetweenCurves = 55;
   ctx: any;
 
@@ -86,7 +92,10 @@ export class PathBuilder {
         return [this.getNextPoint(this.startPoint)];
       }
 
-      const curvePath = new CurvePath(this.direction, this.step);
+      const curvePath = new CurvePath(
+        this.direction,
+        getRandomDigitMinMax(this.minStep, this.maxStep)
+      );
       const curvePoints = curvePath.getCurvePoints(
         pathPoints[pathPoints.length - 1]
       );
