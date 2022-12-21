@@ -26,16 +26,16 @@ export const getCastle = (): Castle => {
   const state: CastleState = {
     position: CASTLE_POSITION,
     size: CASTLE_SIZE,
-    health: CASTLE_HEALTH,
+    healthPoints: CASTLE_HEALTH,
     image: getCastleImage(),
   };
 
   const actions: CastleActions = {
     getDamage(damageValue: number) {
-      state.health = state.health - damageValue;
+      state.healthPoints = state.healthPoints - damageValue;
     },
     getHealth(healthValue: number) {
-      state.health = state.health + healthValue;
+      state.healthPoints = state.healthPoints + healthValue;
     },
     drawCastle: (ctx: any) => {
       drawCastle(state, ctx);

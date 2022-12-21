@@ -1,6 +1,5 @@
-import { Position } from "../game/interface";
 import { getBlankArray, getRandomDigit } from "../helper/help";
-import { PathDirection } from "./interface";
+import { PathDirection, PathPoint, PathPoints } from "./interface";
 
 export class CurvePath {
   mainDirection: PathDirection;
@@ -11,7 +10,7 @@ export class CurvePath {
     this.step = step;
   }
 
-  getCurvePoints(fromPosition: Position): Position[] {
+  getCurvePoints(fromPosition: PathPoint): PathPoints {
     const curveDirection: PathDirection[] =
       this.mainDirection === "toTop" || this.mainDirection === "toBottom"
         ? ["toLeft", "toRight"]
@@ -32,27 +31,31 @@ export class CurvePath {
   }
 
   getNextPointForCurve(
-    fromPosition: Position,
+    fromPosition: PathPoint,
     directionForCurve: string
-  ): Position {
+  ): PathPoint {
     switch (directionForCurve) {
       case "toTop":
         return {
+          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y - this.step,
         };
       case "toLeft":
         return {
+          ...fromPosition,
           x: fromPosition.x - this.step,
           y: fromPosition.y,
         };
       case "toRight":
         return {
+          ...fromPosition,
           x: fromPosition.x + this.step,
           y: fromPosition.y,
         };
       case "toBottom":
         return {
+          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y + this.step,
         };

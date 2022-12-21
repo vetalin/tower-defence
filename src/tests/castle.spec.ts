@@ -32,19 +32,19 @@ describe("У замка есть статы", () => {
     castle = getCastle();
   });
   it("У замка есть здоровье", () => {
-    expect(castle.state.health).toBe(CASTLE_HEALTH);
+    expect(castle.state.healthPoints).toBe(CASTLE_HEALTH);
   });
 
   it("When castle get damage, healthpoint is decrease", () => {
-    expect(castle.state.health).toBe(CASTLE_HEALTH);
+    expect(castle.state.healthPoints).toBe(CASTLE_HEALTH);
     castle.actions.getDamage(10);
-    expect(castle.state.health).toBe(CASTLE_HEALTH - 10);
+    expect(castle.state.healthPoints).toBe(CASTLE_HEALTH - 10);
   });
 
   it("When castle get health, healthpoint is increase", () => {
     castle.actions.getDamage(10);
-    expect(castle.state.health).toBe(CASTLE_HEALTH - 10);
+    expect(castle.state.healthPoints).toBe(CASTLE_HEALTH - 10);
     castle.actions.getHealth(10);
-    expect(castle.state.health).toBe(CASTLE_HEALTH);
+    expect(castle.state.healthPoints).toBe(CASTLE_HEALTH);
   });
 });

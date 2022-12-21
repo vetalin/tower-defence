@@ -1,19 +1,18 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../game/const";
-import { Position } from "../game/interface";
 import {
   getBlankArray,
   getRandomDigit,
   getRandomDigitMinMax,
 } from "../helper/help";
 import { CurvePath } from "./CurvePath";
-import { PathDirection, PathPoints } from "./interface";
+import { PathDirection, PathPoint, PathPoints } from "./interface";
 import { PathDrawer } from "./PathDrawer";
 
 export class PathBuilder {
   direction: PathDirection;
   countCurvesLimit = 3;
   endPoint = { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 };
-  startPoint: Position;
+  startPoint: PathPoint;
   step = 35;
   maxStep = 45;
   minStep = 20;
@@ -55,28 +54,35 @@ export class PathBuilder {
       toBottom: topCenterPath,
     };
 
-    this.startPoint = startPoints[this.direction];
+    this.startPoint = {
+      ...startPoints[this.direction],
+      direction: this.direction,
+    };
   }
 
-  getNextPoint(fromPosition: Position): Position {
+  getNextPoint(fromPosition: PathPoint): PathPoint {
     switch (this.direction) {
       case "toTop":
         return {
+          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y - this.spaceBetweenCurves,
         };
       case "toRight":
         return {
+          ...fromPosition,
           x: fromPosition.x + this.spaceBetweenCurves,
           y: fromPosition.y,
         };
       case "toBottom":
         return {
+          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y + this.spaceBetweenCurves,
         };
       case "toLeft":
         return {
+          ...fromPosition,
           x: fromPosition.x - this.spaceBetweenCurves,
           y: fromPosition.y,
         };
@@ -104,7 +110,7 @@ export class PathBuilder {
       const lastCurvePoint = curvePoints[lastCurvePointIndex];
 
       return [...pathPoints, ...curvePoints, this.getNextPoint(lastCurvePoint)];
-    }, [] as Position[]);
+    }, []);
 
     this.path = [this.startPoint, ...path, this.endPoint];
   }

@@ -9,3 +9,7 @@ export const getRandomDigitMinMax = (min: number, max: number): number => {
 export const getBlankArray = (length: number): number[] => {
   return Array.from({ length }, (_, i) => i);
 };
+
+export const wait = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

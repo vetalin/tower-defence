@@ -1,18 +1,17 @@
+import { Unit, UnitActions, UnitState } from "../common/interface";
 import { Position, Size, Color } from "../game/interface";
 
-export interface Castle {
+export interface Castle extends Unit {
   state: CastleState;
   actions: CastleActions;
 }
 
-export interface CastleState {
+export interface CastleState extends UnitState {
   position: Position;
   size: Size;
-  health: number;
-  image: HTMLImageElement;
 }
 
-export interface CastleActions {
+export interface CastleActions extends UnitActions {
   getDamage: (value: number) => void;
   getHealth: (value: number) => void;
   drawCastle: (ctx: any) => void;
