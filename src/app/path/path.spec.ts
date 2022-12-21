@@ -1,9 +1,9 @@
-import { CurvePath } from "../app/path/curvePath";
-import { Path } from "../app/path/path";
+import { CurvePath } from "./CurvePath";
+import { PathBuilder } from "./PathBuilder";
 
 describe("Starting of path", () => {
   it("Check that choosing one side of path", () => {
-    const path = new Path(null);
+    const path = new PathBuilder(null);
     path.direction = "toTop";
     path.getStartPoint();
     expect(path.startPoint.x).toBe(400);
@@ -11,19 +11,19 @@ describe("Starting of path", () => {
   });
 
   it("Path must be end in castle", () => {
-    const path = new Path(null);
+    const path = new PathBuilder(null);
     path.direction = "toTop";
     path.getStartPoint();
-    path.renderPathWithCurves();
+    path.renderAllPointForPath();
     expect(path.endPoint.x).toBe(400);
     expect(path.endPoint.y).toBe(400);
   });
 
   it("Path not include not 90 deg angles", () => {
-    const path = new Path(null);
+    const path = new PathBuilder(null);
     path.direction = "toTop";
     path.getStartPoint();
-    path.renderPathWithCurves();
+    path.renderAllPointForPath();
     const allPoints = path.path;
     console.log(allPoints);
     // Из стартовой точки линия строго идет вверх
@@ -42,13 +42,13 @@ describe("Starting of path", () => {
 });
 
 describe("Curve", () => {
-  let path: Path;
+  let path: PathBuilder;
   let curvePath: CurvePath;
   beforeEach(() => {
-    path = new Path(null);
+    path = new PathBuilder(null);
     path.getRandomDirection();
     path.getStartPoint();
-    curvePath = new CurvePath(path.direction);
+    curvePath = new CurvePath(path.direction, path.step);
   });
 
   it("Curve have start position", () => {
@@ -79,30 +79,23 @@ describe("Curve", () => {
     curvePath.mainDirection = "toTop";
     path.getStartPoint();
 
-    const curveToLeft = curvePath.getNextPointForCurve(
-      { x: 400, y: 200 },
-      "toLeft"
-    );
-    expect(curveToLeft.x).toBe(300);
-    expect(curveToLeft.y).toBe(200);
-    const curveToRight = curvePath.getNextPointForCurve(
-      { x: 400, y: 200 },
-      "toRight"
-    );
-    expect(curveToRight.x).toBe(500);
-    expect(curveToRight.y).toBe(200);
-    const curveToTop = curvePath.getNextPointForCurve(
-      { x: 400, y: 200 },
-      "toTop"
-    );
-    expect(curveToTop.x).toBe(400);
-    expect(curveToTop.y).toBe(100);
+    const startPoint = { x: 400, y: 200 };
+
+    const curveToLeft = curvePath.getNextPointForCurve(startPoint, "toLeft");
+    expect(curveToLeft.x).toBe(startPoint.x - path.step);
+    expect(curveToLeft.y).toBe(startPoint.y);
+    const curveToRight = curvePath.getNextPointForCurve(startPoint, "toRight");
+    expect(curveToRight.x).toBe(startPoint.x + path.step);
+    expect(curveToRight.y).toBe(startPoint.y);
+    const curveToTop = curvePath.getNextPointForCurve(startPoint, "toTop");
+    expect(curveToTop.x).toBe(startPoint.x);
+    expect(curveToTop.y).toBe(startPoint.y - path.step);
     const curveToBottom = curvePath.getNextPointForCurve(
-      { x: 400, y: 200 },
+      startPoint,
       "toBottom"
     );
-    expect(curveToBottom.x).toBe(400);
-    expect(curveToBottom.y).toBe(300);
+    expect(curveToBottom.x).toBe(startPoint.x);
+    expect(curveToBottom.y).toBe(startPoint.y + path.step);
   });
 
   it("Curve first point has different axis of main direction", () => {

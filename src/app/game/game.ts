@@ -1,5 +1,5 @@
 import { getCastle } from "../castle/getCastle";
-import { Path } from "../path/path";
+import { PathBuilder } from "../path/PathBuilder";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./const";
 
 const drawGame = (ctx: any): void => {
@@ -25,6 +25,6 @@ export const startGame = () => {
 
   drawGame(ctx);
 
-  const path = new Path(ctx);
+  const path = new PathBuilder(ctx);
   path.build();
 };

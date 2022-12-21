@@ -1,13 +1,14 @@
 import { Position } from "../game/interface";
 import { getBlankArray, getRandomDigit } from "../helper/help";
-import { PathDirection } from "./path";
+import { PathDirection } from "./interface";
 
 export class CurvePath {
   mainDirection: PathDirection;
-  step: number = 100;
+  step: number;
 
-  constructor(direction: PathDirection) {
+  constructor(direction: PathDirection, step: number) {
     this.mainDirection = direction;
+    this.step = step;
   }
 
   getCurvePoints(fromPosition: Position): Position[] {

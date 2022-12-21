@@ -1,19 +1,17 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../game/const";
 import { Position } from "../game/interface";
 import { getBlankArray, getRandomDigit } from "../helper/help";
-import { CurvePath } from "./curvePath";
+import { CurvePath } from "./CurvePath";
+import { PathDirection, PathPoints } from "./interface";
+import { PathDrawer } from "./PathDrawer";
 
-export type PathDirection = "toTop" | "toLeft" | "toRight" | "toBottom";
-
-type PathPoints = Position[];
-
-export class Path {
+export class PathBuilder {
   direction: PathDirection;
   countCurvesLimit = 3;
   endPoint = { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 };
   startPoint: Position;
-  step = 100;
-  spaceBetweenCurves = 100;
+  step = 35;
+  spaceBetweenCurves = 55;
   ctx: any;
 
   path: PathPoints = [];
@@ -25,8 +23,9 @@ export class Path {
   build(): void {
     this.getRandomDirection();
     this.getStartPoint();
-    this.renderPathWithCurves();
-    this.drawPath();
+    this.renderAllPointForPath();
+    const pathDrawer = new PathDrawer(this.ctx, this.path);
+    pathDrawer.draw();
   }
 
   getRandomDirection(): void {
@@ -53,60 +52,49 @@ export class Path {
     this.startPoint = startPoints[this.direction];
   }
 
-  drawPath(): void {
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.startPoint.x, this.startPoint.y);
-    this.path.map((path) => {
-      this.ctx.lineTo(path.x, path.y);
-    });
-
-    this.ctx.stroke();
-  }
-
   getNextPoint(fromPosition: Position): Position {
     switch (this.direction) {
       case "toTop":
         return {
           x: fromPosition.x,
-          y: fromPosition.y + this.spaceBetweenCurves,
+          y: fromPosition.y - this.spaceBetweenCurves,
         };
       case "toRight":
         return {
-          x: fromPosition.x - this.spaceBetweenCurves,
+          x: fromPosition.x + this.spaceBetweenCurves,
           y: fromPosition.y,
         };
       case "toBottom":
         return {
           x: fromPosition.x,
-          y: fromPosition.y - this.spaceBetweenCurves,
+          y: fromPosition.y + this.spaceBetweenCurves,
         };
       case "toLeft":
         return {
-          x: fromPosition.x + this.spaceBetweenCurves,
+          x: fromPosition.x - this.spaceBetweenCurves,
           y: fromPosition.y,
         };
     }
   }
 
-  renderPathWithCurves(): void {
+  renderAllPointForPath(): void {
     const curvesCount = getRandomDigit(this.countCurvesLimit);
     const pathPointsList = [this.startPoint, ...getBlankArray(curvesCount)];
 
     const path = pathPointsList.reduce((pathPoints, _, currentPointIndex) => {
-      if (pathPoints.length === 0) {
+      if (currentPointIndex === 0) {
         return [this.getNextPoint(this.startPoint)];
       }
 
-      const curvePath = new CurvePath(this.direction);
+      const curvePath = new CurvePath(this.direction, this.step);
       const curvePoints = curvePath.getCurvePoints(
-        pathPoints[currentPointIndex - 1]
+        pathPoints[pathPoints.length - 1]
       );
 
-      return [
-        ...pathPoints,
-        ...curvePoints,
-        this.getNextPoint(curvePoints[curvePoints.length - 1]),
-      ];
+      const lastCurvePointIndex = curvePoints.length - 1;
+      const lastCurvePoint = curvePoints[lastCurvePointIndex];
+
+      return [...pathPoints, ...curvePoints, this.getNextPoint(lastCurvePoint)];
     }, [] as Position[]);
 
     this.path = [this.startPoint, ...path, this.endPoint];
