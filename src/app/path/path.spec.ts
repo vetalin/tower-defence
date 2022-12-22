@@ -89,7 +89,7 @@ describe("Curve", () => {
 
   it("Curve have 3 points", () => {
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDirection"] = "toTop";
     path.getStartPoint();
     const curvePoints = curvePath.getCurvePoints(path.startPoint);
     expect(curvePoints.length).toBe(3);
@@ -97,30 +97,33 @@ describe("Curve", () => {
 
   it("function getDirectionForCurve return pravilno direction from index (curve piece)", () => {
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDirection"] = "toTop";
     path.getStartPoint();
-    expect(curvePath.getDirectionForCurve("toLeft", 0)).toBe("toLeft");
-    expect(curvePath.getDirectionForCurve("toLeft", 1)).toBe("toTop");
-    expect(curvePath.getDirectionForCurve("toLeft", 2)).toBe("toRight");
+    expect(curvePath["getDirectionForCurve"]("toLeft", 0)).toBe("toLeft");
+    expect(curvePath["getDirectionForCurve"]("toLeft", 1)).toBe("toTop");
+    expect(curvePath["getDirectionForCurve"]("toLeft", 2)).toBe("toRight");
   });
 
   it("getNextPointForCurve return right value direction from", () => {
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDiretction"] = "toTop";
     path.getStartPoint();
 
     const startPoint = { x: 400, y: 200 };
 
-    const curveToLeft = curvePath.getNextPointForCurve(startPoint, "toLeft");
+    const curveToLeft = curvePath["getNextPointForCurve"](startPoint, "toLeft");
     expect(curveToLeft.x).toBe(startPoint.x - path.step);
     expect(curveToLeft.y).toBe(startPoint.y);
-    const curveToRight = curvePath.getNextPointForCurve(startPoint, "toRight");
+    const curveToRight = curvePath["getNextPointForCurve"](
+      startPoint,
+      "toRight"
+    );
     expect(curveToRight.x).toBe(startPoint.x + path.step);
     expect(curveToRight.y).toBe(startPoint.y);
-    const curveToTop = curvePath.getNextPointForCurve(startPoint, "toTop");
+    const curveToTop = curvePath["getNextPointForCurve"](startPoint, "toTop");
     expect(curveToTop.x).toBe(startPoint.x);
     expect(curveToTop.y).toBe(startPoint.y - path.step);
-    const curveToBottom = curvePath.getNextPointForCurve(
+    const curveToBottom = curvePath["getNextPointForCurve"](
       startPoint,
       "toBottom"
     );
@@ -132,11 +135,11 @@ describe("Curve", () => {
     const point = { x: 400, y: 800 };
 
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDirection"] = "toTop";
     const curvePointsToTop = curvePath.getCurvePoints(point);
     expect(curvePointsToTop[0].x).not.toBe(400);
     path.direction = "toLeft";
-    curvePath.mainDirection = "toLeft";
+    curvePath["mainDirection"] = "toLeft";
     const curvePointsToLeft = curvePath.getCurvePoints(point);
     expect(curvePointsToLeft[0].y).not.toBe(800);
   });
@@ -145,12 +148,12 @@ describe("Curve", () => {
     const point = { x: 400, y: 800 };
 
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDirection"] = "toTop";
     const curvePointsToTop = curvePath.getCurvePoints(point);
     expect(curvePointsToTop[1].y).toBeLessThan(800);
     // ---
     path.direction = "toLeft";
-    curvePath.mainDirection = "toLeft";
+    curvePath["mainDirection"] = "toLeft";
     const curvePointsToLeft = curvePath.getCurvePoints(point);
     expect(curvePointsToLeft[1].x).toBeLessThan(400);
   });
@@ -159,13 +162,13 @@ describe("Curve", () => {
     const point = { x: 400, y: 800 };
 
     path.direction = "toTop";
-    curvePath.mainDirection = "toTop";
+    curvePath["mainDirection"] = "toTop";
     const curvePointsToTop = curvePath.getCurvePoints(point);
     expect(curvePointsToTop[2].y).toBeLessThan(800);
     expect(curvePointsToTop[2].x).toBe(400);
 
     path.direction = "toLeft";
-    curvePath.mainDirection = "toLeft";
+    curvePath["mainDirection"] = "toLeft";
     const curvePointsToLeft = curvePath.getCurvePoints(point);
     expect(curvePointsToLeft[2].x).toBeLessThan(400);
     expect(curvePointsToLeft[2].y).toBe(800);

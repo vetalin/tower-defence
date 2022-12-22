@@ -43,7 +43,7 @@ export class PathBuilder {
     const directions = ["toTop", "toLeft", "toRight", "toBottom"];
 
     this.direction = directions[
-      getRandomDigit(directions.length)
+      getRandomDigit(directions.length - 1)
     ] as PathDirection;
   }
 
@@ -69,25 +69,21 @@ export class PathBuilder {
     switch (this.direction) {
       case "toTop":
         return {
-          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y - this.spaceBetweenCurves,
         };
       case "toRight":
         return {
-          ...fromPosition,
           x: fromPosition.x + this.spaceBetweenCurves,
           y: fromPosition.y,
         };
       case "toBottom":
         return {
-          ...fromPosition,
           x: fromPosition.x,
           y: fromPosition.y + this.spaceBetweenCurves,
         };
       case "toLeft":
         return {
-          ...fromPosition,
           x: fromPosition.x - this.spaceBetweenCurves,
           y: fromPosition.y,
         };
@@ -107,6 +103,7 @@ export class PathBuilder {
         this.direction,
         getRandomDigitMinMax(this.minStep, this.maxStep)
       );
+
       const curvePoints = curvePath.getCurvePoints(
         pathPoints[pathPoints.length - 1]
       );

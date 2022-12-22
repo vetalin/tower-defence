@@ -1,9 +1,8 @@
 import { Position } from "../game/interface";
-import { PathBuilder } from "./PathBuilder";
 
 export class PathDrawer {
-  ctx: any;
-  path: Position[];
+  private ctx: any;
+  private path: Position[];
 
   constructor(ctx: any, path: Position[]) {
     this.ctx = ctx;
