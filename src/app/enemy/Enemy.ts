@@ -46,7 +46,7 @@ export class Enemy extends AbstractEnemyUnit {
             ...accPoints,
             {
               ...currentPoint,
-              distance: currentPoint + this.speed,
+              // distance: currentPoint + this.speed,
             },
           ];
         },

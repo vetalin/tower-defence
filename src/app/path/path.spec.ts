@@ -25,7 +25,6 @@ describe("Starting of path", () => {
     path.getStartPoint();
     path.renderAllPointForPath();
     const allPoints = path.path;
-    console.log(allPoints);
     // Из стартовой точки линия строго идет вверх
     expect(allPoints[0].x).toBe(allPoints[1].x);
     expect(allPoints[0].y).not.toBe(allPoints[1].y);
@@ -38,6 +37,37 @@ describe("Starting of path", () => {
     // Колено заканчивается и возвращается к исходной линии
     expect(allPoints[3].x).not.toBe(allPoints[4].x);
     expect(allPoints[3].y).toBe(allPoints[4].y);
+  });
+
+  it("Path includes pathPointDirections list, directions have same lenght from path", () => {
+    const path = new PathBuilder(null);
+    path.direction = "toTop";
+    path.getStartPoint();
+    path.renderAllPointForPath();
+
+    expect(path.pathDirections.length).toBe(path.path.length);
+  });
+
+  it("Path includes pathPointDirections list, directions have thruthy direction from point", () => {
+    const path = new PathBuilder(null);
+    path.direction = "toTop";
+    path.getStartPoint();
+    const getPoint = (x, y) => ({ x, y });
+    path.path = [
+      getPoint(400, 800),
+      getPoint(400, 700),
+      getPoint(300, 700),
+      getPoint(300, 600),
+      getPoint(400, 600),
+    ];
+
+    path.pathDirections = path.getPathDirectionsFromPath(path.path);
+
+    expect(path.pathDirections[0]).toBe("toTop");
+    expect(path.pathDirections[1]).toBe("toTop");
+    expect(path.pathDirections[2]).toBe("toLeft");
+    expect(path.pathDirections[3]).toBe("toTop");
+    expect(path.pathDirections[4]).toBe("toRight");
   });
 });
 

@@ -5,7 +5,12 @@ import {
   getRandomDigitMinMax,
 } from "../helper/help";
 import { CurvePath } from "./CurvePath";
-import { PathDirection, PathPoint, PathPoints } from "./interface";
+import {
+  PathDirection,
+  PathPoint,
+  PathPointDirectoins,
+  PathPoints,
+} from "./interface";
 import { PathDrawer } from "./PathDrawer";
 
 export class PathBuilder {
@@ -20,6 +25,7 @@ export class PathBuilder {
   ctx: any;
 
   path: PathPoints = [];
+  pathDirections: PathPointDirectoins = [];
 
   constructor(ctx: any) {
     this.ctx = ctx;
@@ -56,7 +62,6 @@ export class PathBuilder {
 
     this.startPoint = {
       ...startPoints[this.direction],
-      direction: this.direction,
     };
   }
 
@@ -113,5 +118,40 @@ export class PathBuilder {
     }, []);
 
     this.path = [this.startPoint, ...path, this.endPoint];
+    this.pathDirections = this.getPathDirectionsFromPath(this.path);
+  }
+
+  getPathDirectionsFromPath(path: PathPoints): PathPointDirectoins {
+    return path
+      .reduce((pathPointWithDirections, pathPoint, pathPointIndex) => {
+        if (pathPointIndex === 0) {
+          return [
+            {
+              ...pathPoint,
+              direction: this.direction,
+            },
+          ];
+        }
+
+        const previousPoint = pathPointWithDirections[pathPointIndex - 1];
+        const diffX = pathPoint.x - previousPoint.x;
+        const diffY = pathPoint.y - previousPoint.y;
+
+        const pointDirection = (() => {
+          if (diffX > 0) return "toRight";
+          if (diffX < 0) return "toLeft";
+          if (diffY > 0) return "toBottom";
+          if (diffY < 0) return "toTop";
+        })();
+
+        return [
+          ...pathPointWithDirections,
+          {
+            ...pathPoint,
+            direction: pointDirection,
+          },
+        ];
+      }, [])
+      .map(({ direction }) => direction);
   }
 }
