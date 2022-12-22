@@ -30,11 +30,11 @@ export const startGame = async () => {
   const path = new PathBuilder(ctx);
   path.build();
 
-  const enemy = new Enemy(10, path.path);
+  const enemy = new Enemy(10, path.path, ctx);
   enemy.spawn();
-  enemy.drawUnit(ctx);
+  enemy.drawUnit();
 
   const { stopLoop } = enemy.startLoop();
-  await wait(1000);
-  stopLoop();
+  // await wait(1000);
+  // stopLoop();
 };

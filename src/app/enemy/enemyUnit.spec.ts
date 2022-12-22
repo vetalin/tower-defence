@@ -44,10 +44,31 @@ describe("Enemy can move", () => {
     expect(getDiffTime()).toBeLessThan(1.2);
   });
 
-  it("Enemy have distance between every points", () => {
-    const speed = 10;
-    const { path: pathOfPathBuilder } = new PathBuilder(null);
-    const enemy = new Enemy();
+  // Мы берем путь до замка
+  // Враг двигается по пути, до колена
+  // Считывается в какую сторону колено и двигается туда
+  // И так до конца пути в замок
+
+  it("Enemy can move from point to point", async () => {
+    // const speed = 10;
+    // const path = [
+    //   {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   {
+    //     x: 10,
+    //     y: 0,
+    //   },
+    // ];
+    // const enemy = new Enemy(speed, path);
+    // enemy.spawn();
+    // enemy.startLoop();
+    // await wait(1000);
+    // expect(enemy.position.x).toBe(10);
+  });
+
+  it("Find next point for enemy", () => {
     const path = [
       {
         x: 0,
@@ -57,10 +78,61 @@ describe("Enemy can move", () => {
         x: 10,
         y: 0,
       },
+      {
+        x: 20,
+        y: 0,
+      },
     ];
-    const distance = enemy.getPathWithDistance();
-    expect(distance[0].distance).toBe(0);
-    expect(distance[1].distance).toBe(10);
+
+    const enemy = new Enemy(10, path);
+
+    const nextPointForEnemy = enemy.getTargetPoint(path, { x: 0, y: 0 });
+    expect(nextPointForEnemy.x).toBe(10);
+    const nextPointForEnemy1 = enemy.getTargetPoint(path, { x: 10, y: 0 });
+    expect(nextPointForEnemy1.x).toBe(20);
+  });
+
+  it("Enemy must move to next point", () => {
+    const path = [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: 10,
+        y: 0,
+      },
+      {
+        x: 20,
+        y: 0,
+      },
+    ];
+    const enemy = new Enemy(10, path);
+    enemy.spawn();
+
+    enemy.moveToPointSmoothly(path[1], 1);
+    expect(enemy.position.x).toBe(10);
+    enemy.moveToPointSmoothly(path[2], 1.5);
+    expect(enemy.position.x).toBe(15);
+  });
+
+  it("Enemy have distance between every points", () => {
+    // const speed = 10;
+    // const { path: pathOfPathBuilder } = new PathBuilder(null);
+    // const enemy = new Enemy();
+    // const path = [
+    //   {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   {
+    //     x: 10,
+    //     y: 0,
+    //   },
+    // ];
+    // const distance = enemy.getPathWithDistance();
+    // expect(distance[0].distance).toBe(0);
+    // expect(distance[1].distance).toBe(10);
   });
 
   it("Enemy have direction between every points", () => {
