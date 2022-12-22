@@ -1,4 +1,6 @@
 import { getCastle } from "../castle/getCastle";
+import { Enemy } from "../enemy/Enemy";
+import { wait } from "../helper/help";
 import { PathBuilder } from "../path/PathBuilder";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./const";
 
@@ -11,7 +13,7 @@ const drawGame = (ctx: any): void => {
   ctx.strokeRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // 800 x 600
 };
 
-export const startGame = () => {
+export const startGame = async () => {
   const canvas = document.getElementById("canvas");
 
   if (canvas === null) {
@@ -27,4 +29,12 @@ export const startGame = () => {
 
   const path = new PathBuilder(ctx);
   path.build();
+
+  const enemy = new Enemy(10, path.path);
+  enemy.spawn();
+  enemy.drawUnit(ctx);
+
+  const { stopLoop } = enemy.startLoop();
+  await wait(1000);
+  stopLoop();
 };

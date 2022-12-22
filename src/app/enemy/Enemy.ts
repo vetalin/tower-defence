@@ -1,6 +1,6 @@
 import { Position } from "../game/interface";
 import { PathPoints } from "../path/interface";
-import { AbstractEnemyUnit } from "./interface";
+import { AbstractEnemyUnit, GetDiffTime, LoopOutput } from "./interface";
 
 export class Enemy extends AbstractEnemyUnit {
   speed: number;
@@ -13,6 +13,8 @@ export class Enemy extends AbstractEnemyUnit {
   health: number;
   armor: number;
   position: Position;
+  image =
+    "https://w7.pngwing.com/pngs/964/244/png-transparent-pac-man-computer-icons-enemy-ghost-icon-angle-white-text-thumbnail.png";
 
   constructor(speed: number, path: PathPoints) {
     super();
@@ -20,42 +22,42 @@ export class Enemy extends AbstractEnemyUnit {
     this.path = path;
   }
 
-  move(): void {
-    const interval = 0.1;
-    const startTimeMove = Date.now();
-    setInterval(() => {
-      // Засемаем дату старта в таймстемпе
-      // После каждого интервала считаем сколько времени прошло diff
-      // Мы должны получить точку из набора, в зависимости от времени, которое прошло diff
-      // Надо получить расстояние, которое прошел объект
-      // diff * speed = distance
-      // создаем массив точек, содержащих их дистанцию от начала
-      // Получив точку - мы меняем position до следующей точки
-      // Мы берем разницу координат и делим на скорость
-      // Каждую итерацию мы добавляем к position разницу координат деленную на скорость
-      const startTimeItteration = Date.now();
-      const diffTimes = (startTimeItteration - startTimeMove) * 1000; // in seconds
-      const distance = diffTimes * this.speed;
-      const pointsWithDistance = this.path.reduce(
-        (accPoints, currentPoint, currentPointIndex) => {
-          if (currentPointIndex === 0) {
-            return [{ ...currentPoint, distance: 0 }];
-          }
-
-          return [
-            ...accPoints,
-            {
-              ...currentPoint,
-              // distance: currentPoint + this.speed,
-            },
-          ];
-        },
-        []
-      );
-      const currentPointIndex = this.path.map((pathPoint) => {
-        this.position = pathPoint;
+  startLoop(): LoopOutput {
+    let loopRunnig = true;
+    const startTime = Date.now();
+    let iterationTime: number;
+    const loop = () => {
+      window.requestAnimationFrame(() => {
+        iterationTime = Date.now();
+        this.move((iterationTime - startTime) / 1000);
+        if (loopRunnig) {
+          loop();
+        }
       });
-    }, interval * 1000);
+    };
+
+    loop();
+
+    return {
+      getDiffTime: () => {
+        return (iterationTime - startTime) / 1000;
+      },
+      stopLoop: () => {
+        loopRunnig = false;
+      },
+    };
+  }
+
+  move(time: number): void {
+    // Засемаем дату старта в таймстемпе
+    // После каждого интервала считаем сколько времени прошло diff
+    // Мы должны получить точку из набора, в зависимости от времени, которое прошло diff
+    // Надо получить расстояние, которое прошел объект
+    // diff * speed = distance
+    // создаем массив точек, содержащих их дистанцию от начала
+    // Получив точку - мы меняем position до следующей точки
+    // Мы берем разницу координат и делим на скорость
+    // Каждую итерацию мы добавляем к position разницу координат деленную на скорость
   }
   attack(): void {
     throw new Error("Method not implemented.");
@@ -66,10 +68,22 @@ export class Enemy extends AbstractEnemyUnit {
   dying(): void {
     throw new Error("Method not implemented.");
   }
+
   spawn(): void {
     if (this.path.length === 0) {
       throw new Error("Path is not defined");
     }
     this.position = this.path[0];
+  }
+
+  drawUnit(ctx: any): void {
+    const image = document.createElement("img");
+    image.width = 20;
+    image.height = 20;
+    image.src = this.image;
+
+    image.onload = () => {
+      ctx.drawImage(image, this.position.x, this.position.y, 20, 20);
+    };
   }
 }

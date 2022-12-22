@@ -28,6 +28,13 @@ export interface EnemyActions extends UnitActions {
   dying(): void;
 }
 
+export interface LoopOutput {
+  getDiffTime: GetDiffTime;
+  stopLoop: () => void;
+}
+
+export type GetDiffTime = () => number;
+
 export abstract class AbstractEnemyUnit {
   state: EnemyState;
   actions: EnemyActions;
@@ -43,7 +50,9 @@ export abstract class AbstractEnemyUnit {
   abstract health: number;
   abstract armor: number;
 
-  abstract move(): void;
+  abstract move(time: number): void;
+
+  abstract startLoop(): LoopOutput;
 
   abstract attack(): void;
 
