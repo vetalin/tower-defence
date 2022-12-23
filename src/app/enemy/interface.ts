@@ -1,6 +1,10 @@
 import { Unit, UnitActions, UnitState } from "../common/interface";
 import { Position } from "../game/interface";
-import { PathPoints } from "../path/interface";
+import {
+  PathDirection,
+  PathPointDirectoins,
+  PathPoints,
+} from "../path/interface";
 
 export enum EnemyClasses {
   Warrior = "Warrior",
@@ -35,6 +39,11 @@ export interface LoopOutput {
 
 export type GetDiffTime = () => number;
 
+export interface TargetPoint {
+  point: Position;
+  direction: PathDirection;
+}
+
 export abstract class AbstractEnemyUnit {
   state: EnemyState;
   actions: EnemyActions;
@@ -52,7 +61,7 @@ export abstract class AbstractEnemyUnit {
 
   abstract move(time: number): void;
 
-  abstract startLoop(): LoopOutput;
+  abstract startLoop(draw: (position: Position) => {}): LoopOutput;
 
   abstract attack(): void;
 

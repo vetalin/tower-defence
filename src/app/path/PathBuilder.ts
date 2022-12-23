@@ -22,21 +22,16 @@ export class PathBuilder {
   maxStep = 45;
   minStep = 20;
   spaceBetweenCurves = 55;
-  ctx: any;
 
   path: PathPoints = [];
   pathDirections: PathPointDirectoins = [];
 
-  constructor(ctx: any) {
-    this.ctx = ctx;
-  }
+  constructor() {}
 
   build(): void {
     this.getRandomDirection();
     this.getStartPoint();
     this.renderAllPointForPath();
-    const pathDrawer = new PathDrawer(this.ctx, this.path);
-    pathDrawer.draw();
   }
 
   getRandomDirection(): void {

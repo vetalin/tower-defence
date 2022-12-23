@@ -1,10 +1,10 @@
 import { Position } from "../game/interface";
 
 export class PathDrawer {
-  private ctx: any;
+  private ctx: CanvasRenderingContext2D;
   private path: Position[];
 
-  constructor(ctx: any, path: Position[]) {
+  constructor(ctx: CanvasRenderingContext2D, path: Position[]) {
     this.ctx = ctx;
     this.path = path;
   }
